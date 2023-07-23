@@ -213,14 +213,19 @@ var listGame = [
 ];
 
 
-let classification = [];
-let map = new Map();
-listGame.forEach((item) => {
-    if (map.get(item.player1.id) == null) {
+// let classification = [];
+let mapListGame = new Map();
+
+listGame.forEach((game) => {
+
+    if (mapListGame.get(game.player1.id) == null) {//verifica se player1 não existe no map
+
+        //cria playerId no map e o objeto player
         let player = new Object();
-        player.setPositives = item.player1Set;
-        player.setNegatives = item.player2Set;
-        if (item.player1Set > item.player2Set) {
+        player.setPositives = game.player1Set;
+        player.setNegatives = game.player2Set;
+
+        if (game.player1Set > game.player2Set) {
             player.wins = 1;
             player.defeats = 0;
         } else {
@@ -228,48 +233,101 @@ listGame.forEach((item) => {
             player.defeats = 1;
         }
 
-        map.set(item.player1.id, player);
+        player.games = 1;
+        player.winsAverages = 100 * player.wins;
+        player.setAverages = player.setPositives / (player.setPositives + player.setNegatives);
+
+        mapListGame.set(game.player1.id, player);
+
     } else {
-        map.get(item.player1.id).setPositives = map.get(item.player1.id).setPositives + item.player1Set;
-        map.get(item.player1.id).setNegatives = map.get(item.player1.id).setNegatives + item.player2Set;
-        if (item.player1Set > item.player2Set) {
-            map.get(item.player1.id).wins = map.get(item.player1.id).wins + 1;
+
+        //atualiza playerId do map
+        mapListGame.get(game.player1.id).setPositives = mapListGame.get(game.player1.id).setPositives + game.player1Set;
+        mapListGame.get(game.player1.id).setNegatives = mapListGame.get(game.player1.id).setNegatives + game.player2Set;
+        if (game.player1Set > game.player2Set) {
+            mapListGame.get(game.player1.id).wins = mapListGame.get(game.player1.id).wins + 1;
         } else {
-            map.get(item.player1.id).defeats = map.get(item.player1.id).defeats + 1;
+            mapListGame.get(game.player1.id).defeats = mapListGame.get(game.player1.id).defeats + 1;
         }
-        map.get(item.player1.id).wins = map.get(item.player1.id).wins + 1;
+
+        mapListGame.get(game.player1.id).games++;
+        mapListGame.get(game.player1.id).winsAverages = mapListGame.get(game.player1.id).wins / (mapListGame.get(game.player1.id).wins + mapListGame.get(game.player1.id).defeats);
+        mapListGame.get(game.player1.id).setAverages = mapListGame.get(game.player1.id).setPositives / (mapListGame.get(game.player1.id).setPositives + mapListGame.get(game.player1.id).setNegatives);
+
+        //mapListGame.get(game.player1.id).wins = mapListGame.get(game.player1.id).wins + 1;
     }
 
-    if (map.get(item.player2.id) == null) {
+    //verifica se player2 não existe no map
+    if (mapListGame.get(game.player2.id) == null) {
+
+        //cria playerId no map e o objeto player
         let player = new Object();
-        player.setPositives = item.player2Set;
-        player.setNegatives = item.player1Set;
-        if (item.player2Set > item.player1Set) {
+        player.setPositives = game.player2Set;
+        player.setNegatives = game.player1Set;
+
+        if (game.player2Set > game.player1Set) {
             player.wins = 1;
             player.defeats = 0;
         } else {
             player.wins = 0;
             player.defeats = 1;
         }
-        map.set(item.player2.id, player);
+
+        player.games = 1;
+        player.winsAverages = 100 * player.wins;
+        player.setAverages = player.setPositives / (player.setPositives + player.setNegatives);
+
+        mapListGame.set(game.player2.id, player);
+
     } else {
-        map.get(item.player2.id).setPositives = map.get(item.player2.id).setPositives + item.player2Set;
-        map.get(item.player2.id).setNegatives = map.get(item.player2.id).setNegatives + item.player1Set;
-        if (item.player2Set > item.player1Set) {
-            map.get(item.player2.id).wins = map.get(item.player2.id).wins + 1;
+
+        //atualiza playerId do map
+        mapListGame.get(game.player2.id).setPositives = mapListGame.get(game.player2.id).setPositives + game.player2Set;
+        mapListGame.get(game.player2.id).setNegatives = mapListGame.get(game.player2.id).setNegatives + game.player1Set;
+        if (game.player2Set > game.player1Set) {
+            mapListGame.get(game.player2.id).wins = mapListGame.get(game.player2.id).wins + 1;
         } else {
-            map.get(item.player2.id).defeats = map.get(item.player2.id).defeats + 1;
+            mapListGame.get(game.player2.id).defeats = mapListGame.get(game.player2.id).defeats + 1;
         }
+
+        mapListGame.get(game.player2.id).games++;
+        mapListGame.get(game.player2.id).winsAverages = mapListGame.get(game.player2.id).wins / (mapListGame.get(game.player2.id).wins + mapListGame.get(game.player2.id).defeats);
+        mapListGame.get(game.player2.id).setAverages = mapListGame.get(game.player2.id).setPositives / (mapListGame.get(game.player2.id).setPositives + mapListGame.get(game.player2.id).setNegatives);
+
+        //mapListGame.get(game.player2.id).wins = mapListGame.get(game.player2.id).wins + 1;
     }
 
 
-});
-map.forEach((v, k) => {
-    console.log(k + " - setPro: " + v.setPositives + " - setContra: " + v.setNegatives + " - vitorias: " + v.wins + " - derrotas: " + v.defeats);
-});
-console.log(map);
+    // if (map.get(item.player2.id) == null) {
+    //     let player = new Object();
+    //     player.setPositives = item.player2Set;
+    //     player.setNegatives = item.player1Set;
+    //     if (item.player2Set > item.player1Set) {
+    //         player.wins = 1;
+    //         player.defeats = 0;
+    //     } else {
+    //         player.wins = 0;
+    //         player.defeats = 1;
+    //     }
+    //     map.set(item.player2.id, player);
+    // } else {
+    //     map.get(item.player2.id).setPositives = map.get(item.player2.id).setPositives + item.player2Set;
+    //     map.get(item.player2.id).setNegatives = map.get(item.player2.id).setNegatives + item.player1Set;
+    //     if (item.player2Set > item.player1Set) {
+    //         map.get(item.player2.id).wins = map.get(item.player2.id).wins + 1;
+    //     } else {
+    //         map.get(item.player2.id).defeats = map.get(item.player2.id).defeats + 1;
+    //     }
+    // }
 
-for (let item of map) {
+
+});
+mapListGame.forEach((v, k) => {
+    console.log(k + " - vitorias: " + v.wins + " - derrotas: " + v.defeats + " - jogos: " + v.games + " - setPro: " + v.setPositives + " - setContra: " + v.setNegatives + " - derrotas: " + v.defeats);
+});
+console.log(mapListGame);
+
+for (let item of mapListGame) {
     console.log(item);
 }
 
